@@ -2,10 +2,11 @@ package bash_test
 
 import (
 	"context"
+	"flag"
 	"os"
 	"testing"
 
-	"github.com/palsivertsen/go-subcommands"
+	sub "github.com/palsivertsen/go-subcommands"
 	"github.com/palsivertsen/go-subcommands/bash"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -14,21 +15,21 @@ import (
 func TestComplete(t *testing.T) {
 	tests := map[string]struct {
 		compLine, compPoint string
-		cmd                 subcommands.Command
+		cmd                 sub.Command
 		expectedCompl       []string
 	}{
 		"sub completion": {
 			compLine:      "rootCmd cm ignore this",
 			compPoint:     "10", // cursor at "cm"
 			expectedCompl: []string{"cmdA", "cmdB", "cmdC"},
-			cmd: &subcommands.UnimplementedCommand{
-				SubCommands_: []subcommands.Command{
-					&subcommands.UnimplementedCommand{Name_: "cmdA"},
-					&subcommands.UnimplementedCommand{Name_: "cmdC"},
-					&subcommands.UnimplementedCommand{Name_: "cmdB"},
-					&subcommands.UnimplementedCommand{Name_: "hello"},
-					&subcommands.UnimplementedCommand{Name_: "world"},
-					&subcommands.UnimplementedCommand{Name_: "command"},
+			cmd: &command{
+				subs: []sub.Command{
+					&command{name: "cmdA"},
+					&command{name: "cmdC"},
+					&command{name: "cmdB"},
+					&command{name: "hello"},
+					&command{name: "world"},
+					&command{name: "command"},
 				},
 			},
 		},
@@ -47,4 +48,21 @@ func TestComplete(t *testing.T) {
 			assert.Equal(t, tt.expectedCompl, completions)
 		})
 	}
+}
+
+type command struct {
+	name string
+	subs []sub.Command
+}
+
+func (c *command) Name() string {
+	return c.name
+}
+
+func (c *command) SubCommands() []sub.Command {
+	return c.subs
+}
+
+func (c *command) Flags() *flag.FlagSet {
+	panic("Not implemented")
 }

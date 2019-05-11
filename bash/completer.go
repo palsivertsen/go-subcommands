@@ -9,11 +9,12 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/palsivertsen/go-subcommands"
+	sub "github.com/palsivertsen/go-subcommands"
 )
 
-func Complete(ctx context.Context, cmd subcommands.Command) ([]string, error) {
-	env, envErr := getCompletionEnvironment()
+// Complete command for bash
+func Complete(ctx context.Context, cmd sub.Command) ([]string, error) {
+	env, envErr := parseCompletionEnvironment()
 	if envErr != nil {
 		return nil, envErr
 	}
@@ -27,7 +28,8 @@ func Complete(ctx context.Context, cmd subcommands.Command) ([]string, error) {
 	return complete(ctx, cmd, words)
 }
 
-func complete(ctx context.Context, cmd subcommands.Command, words []string) ([]string, error) {
+// complete will recursivly try to complete for given command
+func complete(ctx context.Context, cmd sub.Command, words []string) ([]string, error) {
 	// empty completion
 	if len(words) == 0 {
 		return nil, errors.New("can not handle empty completions yet")
@@ -64,12 +66,14 @@ func complete(ctx context.Context, cmd subcommands.Command, words []string) ([]s
 	return compl, nil
 }
 
+// complEnv is a healper struct for the bash completion enviornment
 type complEnv struct {
 	CompLine  string
 	CompPoint int
 }
 
-func getCompletionEnvironment() (complEnv, error) {
+// parseCompletionEnvironment parses completion variables from environment
+func parseCompletionEnvironment() (complEnv, error) {
 	line := os.Getenv("COMP_LINE")
 
 	pointRaw := os.Getenv("COMP_POINT")
