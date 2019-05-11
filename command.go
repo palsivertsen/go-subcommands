@@ -1,6 +1,6 @@
 package sub
 
-import "flag"
+import "context"
 
 // A Command is an item in a subcommand chain. Any command can be the root command in a chain as it knows nothing about it's parent.
 // A command is allowed to configure it's children.
@@ -9,8 +9,7 @@ type Command interface {
 	Name() string
 	// Children of this command
 	SubCommands() []Command
-	// Flags for this particular command
-	Flags() *flag.FlagSet
+	Exec(context.Context, ...string) error
 }
 
 // UnimplementedCommand is a type one can embed into a struct to make it implement the Command interface without having to implement all the functions
@@ -27,7 +26,7 @@ func (c *UnimplementedCommand) SubCommands() []Command {
 	return nil
 }
 
-// Flags implements Command interface
-func (c *UnimplementedCommand) Flags() *flag.FlagSet {
+// Exec implements Command interface
+func (c *UnimplementedCommand) Exec(ctx context.Context, args ...string) error {
 	return nil
 }

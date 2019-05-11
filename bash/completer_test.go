@@ -2,7 +2,6 @@ package bash_test
 
 import (
 	"context"
-	"flag"
 	"os"
 	"testing"
 
@@ -51,6 +50,7 @@ func TestComplete(t *testing.T) {
 }
 
 type command struct {
+	sub.UnimplementedCommand
 	name string
 	subs []sub.Command
 }
@@ -61,8 +61,4 @@ func (c *command) Name() string {
 
 func (c *command) SubCommands() []sub.Command {
 	return c.subs
-}
-
-func (c *command) Flags() *flag.FlagSet {
-	panic("Not implemented")
 }
