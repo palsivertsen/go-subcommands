@@ -12,6 +12,30 @@ import (
 	sub "github.com/palsivertsen/go-subcommands"
 )
 
+// Completer implements the sub.Command interface for easy bash completion
+type Completer struct {
+	sub.UnimplementedCommand
+	RootCMD sub.Command
+}
+
+// Exec completion using RootCMD
+func (c *Completer) Exec(ctx context.Context, args ...string) error {
+	compl, err := Complete(ctx, c.RootCMD)
+	if err != nil {
+		return err
+	}
+
+	for _, v := range compl {
+		fmt.Println(v)
+	}
+	return nil
+}
+
+// Name returns "bash-completer"
+func (c *Completer) Name() string {
+	return "bash-completer"
+}
+
 // Complete command for bash
 func Complete(ctx context.Context, cmd sub.Command) ([]string, error) {
 	env, envErr := parseCompletionEnvironment()
