@@ -61,6 +61,11 @@ func Complete(ctx context.Context, cmd base.Command) ([]string, error) {
 
 // complete will recursivly try to complete for given command
 func complete(ctx context.Context, cmd base.Command, words []string) ([]string, error) {
+	select {
+	default:
+	case <-ctx.Done():
+		return nil, ctx.Err()
+	}
 	// empty completion
 	if len(words) == 0 {
 		return nil, errors.New("can not handle empty completions yet")
