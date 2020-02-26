@@ -14,7 +14,6 @@ import (
 
 // Completer implements the base.Command interface for easy bash completion
 type Completer struct {
-	base.RootCommand
 	RootCMD base.Command
 }
 
@@ -34,6 +33,10 @@ func (c *Completer) Exec(ctx context.Context, args ...string) error {
 // Name returns "bash-completer"
 func (c *Completer) Name() string {
 	return "bash-completer"
+}
+
+func (c *Completer) SubCommands() []base.Command {
+	return nil
 }
 
 // Complete command for bash

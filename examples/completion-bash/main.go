@@ -32,7 +32,10 @@ func main() {
 }
 
 type rootCmd struct {
-	base.RootCommand
+}
+
+func (c *rootCmd) Name() string {
+	return "root"
 }
 
 func (c *rootCmd) SubCommands() []base.Command {
@@ -58,8 +61,11 @@ func (c *rootCmd) Exec(ctx context.Context, args ...string) error {
 
 // echo prints all args
 type echo struct {
-	base.RootCommand
 	echoStr string
+}
+
+func (c *echo) SubCommands() []base.Command {
+	return nil
 }
 
 func (c *echo) Name() string {
