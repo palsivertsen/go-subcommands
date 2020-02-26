@@ -7,7 +7,7 @@ import (
 	"log"
 	"strings"
 
-	sub "github.com/palsivertsen/go-subcommands"
+	base "github.com/palsivertsen/go-subcommands"
 	"github.com/palsivertsen/go-subcommands/bash"
 )
 
@@ -32,11 +32,11 @@ func main() {
 }
 
 type rootCmd struct {
-	sub.UnimplementedCommand
+	base.RootCommand
 }
 
-func (c *rootCmd) SubCommands() []sub.Command {
-	return []sub.Command{
+func (c *rootCmd) SubCommands() []base.Command {
+	return []base.Command{
 		&echo{},
 		&bash.Completer{RootCMD: c},
 	}
@@ -58,7 +58,7 @@ func (c *rootCmd) Exec(ctx context.Context, args ...string) error {
 
 // echo prints all args
 type echo struct {
-	sub.UnimplementedCommand
+	base.RootCommand
 	echoStr string
 }
 

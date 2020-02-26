@@ -5,7 +5,7 @@ import (
 	"os"
 	"testing"
 
-	sub "github.com/palsivertsen/go-subcommands"
+	base "github.com/palsivertsen/go-subcommands"
 	"github.com/palsivertsen/go-subcommands/bash"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -14,7 +14,7 @@ import (
 func TestComplete(t *testing.T) {
 	tests := map[string]struct {
 		compLine, compPoint string
-		cmd                 sub.Command
+		cmd                 base.Command
 		expectedCompl       []string
 	}{
 		"sub completion": {
@@ -22,7 +22,7 @@ func TestComplete(t *testing.T) {
 			compPoint:     "10", // cursor at "cm"
 			expectedCompl: []string{"cmdA", "cmdB", "cmdC"},
 			cmd: &command{
-				subs: []sub.Command{
+				subs: []base.Command{
 					&command{name: "cmdA"},
 					&command{name: "cmdC"},
 					&command{name: "cmdB"},
@@ -50,15 +50,15 @@ func TestComplete(t *testing.T) {
 }
 
 type command struct {
-	sub.UnimplementedCommand
+	base.UnimplementedCommand
 	name string
-	subs []sub.Command
+	subs []base.Command
 }
 
 func (c *command) Name() string {
 	return c.name
 }
 
-func (c *command) SubCommands() []sub.Command {
+func (c *command) SubCommands() []base.Command {
 	return c.subs
 }

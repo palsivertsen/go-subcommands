@@ -9,13 +9,13 @@ import (
 	"strconv"
 	"strings"
 
-	sub "github.com/palsivertsen/go-subcommands"
+	base "github.com/palsivertsen/go-subcommands"
 )
 
-// Completer implements the sub.Command interface for easy bash completion
+// Completer implements the base.Command interface for easy bash completion
 type Completer struct {
-	sub.UnimplementedCommand
-	RootCMD sub.Command
+	base.RootCommand
+	RootCMD base.Command
 }
 
 // Exec completion using RootCMD
@@ -37,7 +37,7 @@ func (c *Completer) Name() string {
 }
 
 // Complete command for bash
-func Complete(ctx context.Context, cmd sub.Command) ([]string, error) {
+func Complete(ctx context.Context, cmd base.Command) ([]string, error) {
 	env, envErr := parseCompletionEnvironment()
 	if envErr != nil {
 		return nil, envErr
@@ -53,7 +53,7 @@ func Complete(ctx context.Context, cmd sub.Command) ([]string, error) {
 }
 
 // complete will recursivly try to complete for given command
-func complete(ctx context.Context, cmd sub.Command, words []string) ([]string, error) {
+func complete(ctx context.Context, cmd base.Command, words []string) ([]string, error) {
 	// empty completion
 	if len(words) == 0 {
 		return nil, errors.New("can not handle empty completions yet")

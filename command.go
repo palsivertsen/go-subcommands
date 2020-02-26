@@ -1,4 +1,4 @@
-package sub
+package base
 
 import "context"
 
@@ -12,21 +12,23 @@ type Command interface {
 	Exec(context.Context, ...string) error
 }
 
-// UnimplementedCommand is a type one can embed into a struct to make it implement the Command interface without having to implement all the functions
-type UnimplementedCommand struct {
+// RootCommand is a type one can embed into a struct to use as a base for other command implementations
+type RootCommand struct {
+	N    string
+	Cmds []Command
 }
 
 // Name implements Command interface
-func (c *UnimplementedCommand) Name() string {
-	return ""
+func (c *RootCommand) Name() string {
+	return c.N
 }
 
 // SubCommands implements Command interface
-func (c *UnimplementedCommand) SubCommands() []Command {
-	return nil
+func (c *RootCommand) SubCommands() []Command {
+	return c.Cmds
 }
 
 // Exec implements Command interface
-func (c *UnimplementedCommand) Exec(ctx context.Context, args ...string) error {
+func (c *RootCommand) Exec(ctx context.Context, args ...string) error {
 	return nil
 }
