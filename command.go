@@ -9,5 +9,7 @@ type Command interface {
 	Name() string
 	// Children of this command
 	SubCommands() []Command
+	// Known flags for the current command
+	Flags() []string
 	Exec(context.Context, ...string) error
 }

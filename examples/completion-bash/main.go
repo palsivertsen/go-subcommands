@@ -38,6 +38,10 @@ func (c *rootCmd) Name() string {
 	return "root"
 }
 
+func (c *rootCmd) Flags() []string {
+	return nil
+}
+
 func (c *rootCmd) SubCommands() []base.Command {
 	return []base.Command{
 		&echo{},
@@ -66,6 +70,10 @@ type echo struct {
 
 func (c *echo) SubCommands() []base.Command {
 	return nil
+}
+
+func (c *echo) Flags() []string {
+	return []string{"-hello", "--world"}
 }
 
 func (c *echo) Name() string {

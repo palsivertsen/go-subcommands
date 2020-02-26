@@ -39,6 +39,10 @@ func (c *Completer) SubCommands() []base.Command {
 	return nil
 }
 
+func (c *Completer) Flags() []string {
+	return nil
+}
+
 // Complete command for bash
 func Complete(ctx context.Context, cmd base.Command) ([]string, error) {
 	env, envErr := parseCompletionEnvironment()
@@ -62,11 +66,6 @@ func complete(ctx context.Context, cmd base.Command, words []string) ([]string, 
 		return nil, errors.New("can not handle empty completions yet")
 	}
 
-	// flag completion
-	if strings.HasPrefix(words[0], "-") {
-		return nil, errors.New("can not handle flag completions yet")
-	}
-
 	subs := cmd.SubCommands()
 	word := words[0]
 
@@ -86,6 +85,12 @@ func complete(ctx context.Context, cmd base.Command, words []string) ([]string, 
 	for _, s := range subs {
 		if strings.HasPrefix(s.Name(), word) {
 			compl = append(compl, s.Name())
+		}
+	}
+
+	for _, f := range cmd.Flags() {
+		if strings.HasPrefix(f, word) {
+			compl = append(compl, f)
 		}
 	}
 
